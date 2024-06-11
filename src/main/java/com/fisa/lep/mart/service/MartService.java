@@ -50,7 +50,7 @@ public class MartService {
     private final ProductRepository productRepository;
     private final InventoryRepository inventoryRepository;
 
-//    @Transactional
+    //    @Transactional
     public void insertData(String csvFilePath) {
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(new FileInputStream(csvFilePath), StandardCharsets.UTF_8))) {
 //            try(CSVReader csvReader = new CSVReader(new FileReader(csvFilePath, StandardCharsets.UTF_8))) {
@@ -89,12 +89,22 @@ public class MartService {
                     if (area == null) {
                         area = areaRepository.save(Area.saveArea(areaDTO));
                     }
+
+//                    Brand brand;
+
+//                    try {
+//                        brand = Brand.valueOf(values[7].toUpperCase());
+//                    } catch (IllegalArgumentException | NullPointerException e) {
+//                        log.warn("Invalid brand: {}. Setting default brand to NH.", values[7]);
+//                        brand = Brand.NONE;
+//                    }
+
                     mart = new Mart(name, area);
                     martRepository.save(mart);
                 } else {
                     mart = martRepository.findByName(name).orElse(null);
                 }
-
+//Thread.sleep(100);
                 Product product = null;
 
                 if (!productRepository.existsByName(values[0])) {
