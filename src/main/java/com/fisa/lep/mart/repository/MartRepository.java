@@ -10,10 +10,13 @@ import java.util.Optional;
 
 public interface MartRepository extends JpaRepository<Mart, Long> {
 
-//    @Query
+    
+
     List<Mart> findByArea(Area area);
 
     Optional<Mart> findByName(String name);
+
     boolean existsByName(String name);
+
     Mart save(Mart mart);
 }

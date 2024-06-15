@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fisa.lep.area.dto.request.RequestAreaDTO;
-import com.fisa.lep.area.dto.request.RequestAreaInfoDTO;
 import com.fisa.lep.area.entity.Area;
 import com.fisa.lep.area.repository.AreaRepository;
 import com.fisa.lep.inventory.entity.Inventory;
 import com.fisa.lep.inventory.repository.InventoryRepository;
+import com.fisa.lep.mart.dto.request.RequestDTO;
 import com.fisa.lep.mart.entity.Mart;
 import com.fisa.lep.mart.repository.MartRepository;
 import com.fisa.lep.product.entity.Product;
@@ -53,7 +53,6 @@ public class MartService {
     //    @Transactional
     public void insertData(String csvFilePath) {
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(new FileInputStream(csvFilePath), StandardCharsets.UTF_8))) {
-//            try(CSVReader csvReader = new CSVReader(new FileReader(csvFilePath, StandardCharsets.UTF_8))) {
             String[] values;
             log.info("values : {}", values = csvReader.readNext());
 
@@ -77,34 +76,17 @@ public class MartService {
                         continue; // AreaDTO를 찾을 수 없는 경우 이 항목을 건너뛰기
                     }
 
-//                    Area area = null;
-
-//                    if(!areaRepository.existsByZoneNo(areaDTO.getZoneNo())) {
-//                        area = areaRepository.save(Area.saveArea(areaDTO));
-//                    } else { // 이미 같은 우편번호가 있을 때
-//                        area = areaRepository.findByZoneNo(areaDTO.getZoneNo());
-//                    }
-
                     Area area = areaRepository.findByHjdCode(areaDTO.getHjdCode());
                     if (area == null) {
                         area = areaRepository.save(Area.saveArea(areaDTO));
                     }
-
-//                    Brand brand;
-
-//                    try {
-//                        brand = Brand.valueOf(values[7].toUpperCase());
-//                    } catch (IllegalArgumentException | NullPointerException e) {
-//                        log.warn("Invalid brand: {}. Setting default brand to NH.", values[7]);
-//                        brand = Brand.NONE;
-//                    }
 
                     mart = new Mart(name, area);
                     martRepository.save(mart);
                 } else {
                     mart = martRepository.findByName(name).orElse(null);
                 }
-//Thread.sleep(100);
+
                 Product product = null;
 
                 if (!productRepository.existsByName(values[0])) {
@@ -157,16 +139,11 @@ public class MartService {
 
         String responseBody = responseEntity.getBody();
 
-//        log.info("응답 : {}", responseBody);
-
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-//        String address = jsonNode.get("items").get(0).get("address").asText();
-////        log.info("주소: {}", address);
-//        return address;
         JsonNode items = jsonNode.get("items");
-        if (items != null && items.isArray() && items.size() > 0) {
+        if (items != null && items.isArray() && !items.isEmpty()) {
             String address = items.get(0).get("address").asText();
             return address;
         } else {
@@ -233,35 +210,11 @@ public class MartService {
     }
 
     @Transactional(readOnly = true)
-    public void findLowestPrice(RequestAreaInfoDTO areaInfoDTO) {
-        //        private String fullAddr; // 서울 중구 수표동 99
-
-        // 시나리오 1. 서울 지역 내에서 가장 저렴한 곳 찾기 - OO시에서 찾기
-        // request : depth 1에서 찾기 카테고리, 서울
-
-        RequestAreaDTO requestAreaDTO = getKakaoApiFromAddress(areaInfoDTO.getFullAddr());
+    public String[] findLowestPrice(RequestDTO requestDTO) {
+        String[] lowest = null;
+        RequestAreaDTO requestAreaDTO = getKakaoApiFromAddress(requestDTO.getFullAddr());
         requestAreaDTO.getRegion1depthName();
 
-//        List<Mart> martsInArea = martRepository.findByAreaName(requestAreaDTO.getRegion1depthName());
-//        Product lowestPriceProduct = null;
-//
-//        for (Mart mart : martsInArea) {
-//            List<Product> products = productRepository.findByMartAndName(mart, areaInfoDTO.getProductName());
-//            for (Product product : products) {
-//                // inventory로 바꿔야 함
-////                if (lowestPriceProduct == null || product.getPrice().compareTo(lowestPriceProduct.getPrice()) < 0) {
-////                    lowestPriceProduct = product;
-////                }
-//            }
-//        }
-
-//        if (lowestPriceProduct != null) {
-//            return lowestPriceProduct.getMart();
-//        }
-//
-//        return null;
-
-//        areaRepository.findByFullAddr(areaInfoDTO.getFullAddr());
-
+        return lowest;
     }
 }

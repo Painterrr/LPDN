@@ -2,7 +2,6 @@ package com.fisa.lep.mart.entity;
 
 import com.fisa.lep.area.entity.Area;
 import com.fisa.lep.common.BaseEntity;
-import com.fisa.lep.mart.dto.request.RequestMartDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

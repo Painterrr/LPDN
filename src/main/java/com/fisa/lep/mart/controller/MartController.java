@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fisa.lep.area.dto.request.RequestAreaDTO;
-import com.fisa.lep.area.dto.request.RequestAreaInfoDTO;
+import com.fisa.lep.mart.dto.request.RequestDTO;
 import com.fisa.lep.mart.service.MartService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 @RestController
 @RequestMapping("/api/mart")
 @Slf4j
-@RequiredArgsConstructor
 public class MartController {
 
     @Value("${API-KEY.apiKey}")
@@ -37,6 +36,11 @@ public class MartController {
     String clientSecret;
 
     private final MartService martService;
+
+    @Autowired
+    public MartController(MartService martService) {
+        this.martService = martService;
+    }
 
     /**
      * csv 읽어와서 naver, kakako api 거쳐서 Mart, Area에 데이터 insert
@@ -155,26 +159,19 @@ public class MartController {
         return null;
     }
 
-    // 여기까지 insert했고, 이제 사용자가 입력하면 최대 열 개까지의 점포 보여주기
 
-//     시나리오 1. 서울 지역 내에서 가장 저렴한 곳 찾기 - OO시에서 찾기
-//     request : depth 1에서 찾기 카테고리, 서울
-//
-//     시나리오 2. 마포구 내에서 가장 저렴한 곳 찾기 - OO구에서 찾기
-//     request : depth 2에서 찾기 카테고리, 서울, 중구
-//
-//     시나리오 3. 행정동 내에서 가장 저렴한 곳 찾기 - 내 동네에서 찾기
-//     request : depth 3에서 찾기 카테고리, 서울, 중구, 명동
-//
-//     결론 : 사용자에게 입력받게 하면 귀찮으니까 내 위치 기반 찾아주기
-//     request : 내 위치 fullAddr, depth가 몇인지
-//     response : depth 기반 최저가 최대 열 군데 정보
-
+    /**
+     * "/api/mart/lowest
+     * @param requestDTO(fullAddr, productName)
+     * @return String[]: { "martName, productName, price, area", "", "" }
+     */
     @PostMapping("/lowest")
-    public ResponseEntity<?> findLowestPrice(@RequestBody RequestAreaInfoDTO areaInfoDTO) {
+    public ResponseEntity<String[]> findLowestPrice(@RequestBody RequestDTO requestDTO) {
+        String[] lowest = martService.findLowestPrice(requestDTO);
 
+        log.info("in MartController, lowest[0]: {}", lowest[0]);
 
-        return null;
+        return ResponseEntity.ok(lowest);
 
     }
 }
