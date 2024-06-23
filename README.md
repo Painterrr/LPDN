@@ -157,10 +157,10 @@ ANALYZE TABLE area;
 → <u>1.563 s</u>
 ```sql
 SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
-FROM inventory i USE INDEX (idx_inventory_date_product) -- idx_inventory_date_product
-JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id --
-JOIN mart m USE INDEX (idx_mart_name_brand) ON i.mart_id = m.mart_id -- idx_mart_name_brand
-JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id --
+FROM inventory i USE INDEX (idx_inventory_date_product)
+JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id
+JOIN mart m USE INDEX (idx_mart_name_brand) ON i.mart_id = m.mart_id
+JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id
 WHERE a.region1depth_name = '서울'
 AND a.region2depth_name = '중구'
 AND a.region3depth_name = '수표동'
