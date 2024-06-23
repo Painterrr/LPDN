@@ -1,6 +1,6 @@
 
 # Lowest-price-daily-necessities
-생필품 최저가 검색 서비스
+최저가 생필품 검색 서비스
 
 ## 프로젝트 목적
 DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
