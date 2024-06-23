@@ -12,14 +12,12 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 - 국토교통부_전국 법정동_20240513
 - 한국소비자원_생필품 가격 정보_20240517
 
-- 테이블 셋
+- 테이블
 - ![data_set](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/ab812de4-d1b1-4099-ad2a-f9ff5275da27)
-
-- 데이터 양(rows 수)
-    - area: 403
-    - mart: 459
-    - inventory: 1077442
-    - product: 102898
+- area: 403
+- mart: 459
+- inventory: 1077442
+- product: 102898
 
 <br>
 
