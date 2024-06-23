@@ -26,43 +26,44 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 
 ### 요청과 응답
 - Request
-	```json
-	{
+```json
+{
 	"productName": "머거본 알땅콩(135g)",
 	"region1depthName": "서울",
 	"region2depthName": "중구",
 	"region3depthName": "수표동"
-	}
-	```
+}
+```
 
 - Response
-	```json
-	[
+```json
+[
 	"2024-05-03",
 	"2500.00",
 	"머거본 알땅콩(135g)",
 	"세븐일레븐(본사)",
 	"",
 	"서울 중구 수표동 99"
-	]
-	```
+]
+```
 
 <br>
 
 ### 쿼리
-	```sql
-	SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
-	FROM inventory i 
-	JOIN product p ON i.product_id = p.product_id
-	JOIN mart m ON i.mart_id = m.mart_id
-	JOIN area a ON m.area_id = a.area_id
-	WHERE a.region1depth_name = '서울'
-	AND a.region2depth_name = '중구'
-	AND a.region3depth_name = '수표동'
-	AND p.name = '머거본 알땅콩(135g)'
-	ORDER BY i.price ASC
-	LIMIT 3;
-	```
+
+```sql
+SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
+FROM inventory i 
+JOIN product p ON i.product_id = p.product_id
+JOIN mart m ON i.mart_id = m.mart_id
+JOIN area a ON m.area_id = a.area_id
+WHERE a.region1depth_name = '서울'
+AND a.region2depth_name = '중구'
+AND a.region3depth_name = '수표동'
+AND p.name = '머거본 알땅콩(135g)'
+ORDER BY i.price ASC
+LIMIT 3;
+```
 
 <br>
 
@@ -72,20 +73,20 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 ### 생성
 - 작성된 쿼리를 기준으로 조인 컬럼, 조건 컬럼, 정렬 컬럼으로 인덱스 생성
     
-	```sql
-	-- Mart 테이블의 조인 컬럼에 대한 인덱스
-	CREATE INDEX idx_mart_name_brand ON mart (name, brand);
-	
-	-- Area 테이블의 조건 컬럼에 대한 복합 인덱스
-	CREATE INDEX idx_area_region_depth ON area (region1depthName, region2depthName, region3depthName);
-	
-	-- Product 테이블의 조건 컬럼에 대한 인덱스
-	CREATE INDEX idx_product_name ON product (name);
-	
-	-- Inventory 테이블의 정렬 컬럼에 대한 인덱스
-	CREATE INDEX idx_inventory_price ON inventory (price);
-	CREATE INDEX idx_inventory_date_product ON inventory (check_date, product_id);
-	```
+```sql
+-- Mart 테이블의 조인 컬럼에 대한 인덱스
+CREATE INDEX idx_mart_name_brand ON mart (name, brand);
+
+-- Area 테이블의 조건 컬럼에 대한 복합 인덱스
+CREATE INDEX idx_area_region_depth ON area (region1depthName, region2depthName, region3depthName);
+
+-- Product 테이블의 조건 컬럼에 대한 인덱스
+CREATE INDEX idx_product_name ON product (name);
+
+-- Inventory 테이블의 정렬 컬럼에 대한 인덱스
+CREATE INDEX idx_inventory_price ON inventory (price);
+CREATE INDEX idx_inventory_date_product ON inventory (check_date, product_id);
+```
 
 <br>
 
@@ -142,31 +143,31 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
 - where절에 area, product만 있어서 그런 것 같음
   
 혹시 몰라 통계 정보 최신화
-	```sql
-	ANALYZE TABLE inventory;
-	ANALYZE TABLE product;
-	ANALYZE TABLE mart;
-	ANALYZE TABLE area;
-	```
+```sql
+ANALYZE TABLE inventory;
+ANALYZE TABLE product;
+ANALYZE TABLE mart;
+ANALYZE TABLE area;
+```
 
 <br>
 
 
 ### B+Tree 지정 후
 → <u>1.563 s</u>
-  ```sql
-    SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
-    FROM inventory i USE INDEX (idx_inventory_date_product) -- idx_inventory_date_product
-    JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id --
-    JOIN mart m USE INDEX (idx_mart_name_brand) ON i.mart_id = m.mart_id -- idx_mart_name_brand
-    JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id --
-    WHERE a.region1depth_name = '서울'
-      AND a.region2depth_name = '중구'
-      AND a.region3depth_name = '수표동'
-      AND p.name = '머거본 알땅콩(135g)'
-    ORDER BY i.price ASC
-    LIMIT 3;
-  ```
+```sql
+SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
+FROM inventory i USE INDEX (idx_inventory_date_product) -- idx_inventory_date_product
+JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id --
+JOIN mart m USE INDEX (idx_mart_name_brand) ON i.mart_id = m.mart_id -- idx_mart_name_brand
+JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id --
+WHERE a.region1depth_name = '서울'
+AND a.region2depth_name = '중구'
+AND a.region3depth_name = '수표동'
+AND p.name = '머거본 알땅콩(135g)'
+ORDER BY i.price ASC
+LIMIT 3;
+```
 ![select_BTree](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/18ea5699-5820-49be-adf1-94db176e8bd6)
 
   
@@ -174,25 +175,25 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
 idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
 해당 인덱스 삭제 후 조회
 
-  ```sql
-    -- idx_inventory_date_product, idx_mart_name_brand 삭제
-    ALTER TABLE inventory DROP INDEX idx_inventory_date_product;
-    ALTER TABLE mart DROP INDEX idx_mart_name_brand;
-  ```
+```sql
+-- idx_inventory_date_product, idx_mart_name_brand 삭제
+ALTER TABLE inventory DROP INDEX idx_inventory_date_product;
+ALTER TABLE mart DROP INDEX idx_mart_name_brand;
+```
 
-  ```sql
-    SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
-    FROM inventory i
-    JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id
-    JOIN mart m ON i.mart_id = m.mart_id
-    JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id 
-    WHERE a.region1depth_name = '서울'
-      AND a.region2depth_name = '중구'
-      AND a.region3depth_name = '수표동'
-      AND p.name = '머거본 알땅콩(135g)'
-    ORDER BY i.price ASC
-    LIMIT 3;
-  ```
+```sql
+SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
+FROM inventory i
+JOIN product p USE INDEX (idx_product_name) ON i.product_id = p.product_id
+JOIN mart m ON i.mart_id = m.mart_id
+JOIN area a USE INDEX (idx_area_region) ON m.area_id = a.area_id 
+WHERE a.region1depth_name = '서울'
+AND a.region2depth_name = '중구'
+AND a.region3depth_name = '수표동'
+AND p.name = '머거본 알땅콩(135g)'
+ORDER BY i.price ASC
+LIMIT 3;
+```
 
 → 3.937 s
   
