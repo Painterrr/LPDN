@@ -172,7 +172,7 @@ LIMIT 3;
 
   
 ### where 절에 없는 인덱스 삭제
-idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
+idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않는 줄 알고,  
 해당 인덱스 삭제 후 조회
 
 ```sql
