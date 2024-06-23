@@ -16,8 +16,8 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 - ![data_set](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/ab812de4-d1b1-4099-ad2a-f9ff5275da27)
 - area: 403
 - mart: 459
-- inventory: 1077442
-- product: 102898
+- inventory: 1,077,442
+- product: 102,898
 
 <br>
 
