@@ -79,13 +79,13 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
     ```
 
 ## 프로젝트 수행 결과
-
+  
 ### FULL SCAN
 **평균: 5,067.1 ms (5초)**
-
+  
 ### B+Tree 생성 후
 **평균: 4,132.4 ms (4초)**
-
+  
 → 조회 시간 1초 감소
 → 생각보다 개선이 별로 안돼서 Explain 돌려봄
 
@@ -106,7 +106,7 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 ![create_BTree](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/2ee8146b-f87c-44ef-8528-cf4e9931bcf2)
 - possible_keys: 사용가능한 인덱스
 - key: 사용된 인덱스
-
+  
 mart, inventory에서 기본 인덱스만 사용.(5개 중 2개 사용)
 심지어 생성한 인덱스가 안 보임
 
@@ -114,9 +114,9 @@ mart, inventory에서 기본 인덱스만 사용.(5개 중 2개 사용)
 
 mysql에서 찾아보면 생성한 인덱스 확인 가능
 ![create_BTree_in_mysql](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/e59366e3-dcaa-474a-90e1-0f9546427817)
-
+  
 mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4nl604cgi0ysa8nmpjnhek5만 확인 가능
-
+  
 이유
 - 적합한 인덱스가 아닐 경우
     - 인덱스가 쿼리 조건에 해당하지 않거나, 옵티마이저가 판단하기에 최적의 선택이 아님
@@ -126,7 +126,7 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
     - Mysql 옵티마이저는 인덱스 통계 정보를 바탕으로 인덱스 사용 여부 결정
     - 인덱스 통계 정보가 최신이 아닐 경우 인덱스가 무시될 수 있음
 - where절에 area, product만 있어서 그런 것 같음
-
+  
 혹시 몰라 통계 정보 최신화
   ```sql
     ANALYZE TABLE inventory;
@@ -136,7 +136,6 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
   ```
 
 ### B+Tree 지정 후
-
 → 1.563 s
   ```sql
     SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
@@ -153,9 +152,8 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
   ```
 ![select_BTree](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/18ea5699-5820-49be-adf1-94db176e8bd6)
 
-
+  
 ### where 절에 없는 인덱스 삭제
-
 idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
 해당 인덱스 삭제 후 조회
 
@@ -180,9 +178,10 @@ idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
   ```
 
 → 3.937 s
-
+  
 ⇒ 조인 where 절에 없어도 join 시 인덱스 사용 확인
-
+  
+  
 ## 역량강화
 - index 적용 전 조회 속도: 5.067 sec
 - index 적용 후 조회 속도: 4.132 sec
