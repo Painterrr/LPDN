@@ -1,3 +1,4 @@
+
 # Lowest-price-daily-necessities
 생필품 최저가 검색 서비스
 
@@ -20,7 +21,10 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
     inventory: 1077442
     product: 102898
 
-### 로직
+<br>
+
+
+### 요청과 응답
 - Request
   ```json
 	{
@@ -43,6 +47,8 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
     ]
     ```
 
+<br>
+
 ### 쿼리
   ```sql
     SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
@@ -57,6 +63,9 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
     ORDER BY i.price ASC
     LIMIT 3;
   ```
+
+<br>
+
 
 ## 인덱스
 
@@ -78,13 +87,19 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
     CREATE INDEX idx_inventory_date_product ON inventory (check_date, product_id);
     ```
 
+<br>
+
+
 ## 프로젝트 수행 결과
   
 ### FULL SCAN
-**평균: 5,067.1 ms (5초)**
-  
+평균: <u>5,067.1 ms (5초)</u>
+
+<br>
+
+
 ### B+Tree 생성 후
-**평균: 4,132.4 ms (4초)**
+평균: <u>4,132.4 ms (4초)</u>
   
 → 조회 시간 1초 감소
 → 생각보다 개선이 별로 안돼서 Explain 돌려봄
@@ -110,7 +125,6 @@ DB Index를 활용하여 대용량 데이터 조회 시 검색 속도 개선
 mart, inventory에서 기본 인덱스만 사용.(5개 중 2개 사용)
 심지어 생성한 인덱스가 안 보임
 
-<br>
 
 mysql에서 찾아보면 생성한 인덱스 확인 가능
 ![create_BTree_in_mysql](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/e59366e3-dcaa-474a-90e1-0f9546427817)
@@ -135,8 +149,11 @@ mysql workbench에서 EXPLAIN SELECT ~~실행 시 ossible_keys에 PRIMARY,FKqo4n
     ANALYZE TABLE area;
   ```
 
+<br>
+
+
 ### B+Tree 지정 후
-→ 1.563 s
+→ <u>1.563 s</u>
   ```sql
     SELECT i.check_date, i.price, p.name AS product_name, m.name AS mart_name, m.brand AS mart_brand, a.full_addr
     FROM inventory i USE INDEX (idx_inventory_date_product) -- idx_inventory_date_product
@@ -180,8 +197,9 @@ idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
 → 3.937 s
   
 ⇒ 조인 where 절에 없어도 join 시 인덱스 사용 확인
-  
-  
+
+<br>
+
 ## 역량강화
 - index 적용 전 조회 속도: 5.067 sec
 - index 적용 후 조회 속도: 4.132 sec
