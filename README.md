@@ -166,7 +166,6 @@ AND p.name = '머거본 알땅콩(135g)'
 ORDER BY i.price ASC
 LIMIT 3;
 ```
-![select_BTree](https://github.com/Painterrr/Lowest-price-daily-necessities-search-service/assets/98957340/18ea5699-5820-49be-adf1-94db176e8bd6)
 
   
 ### where 절에 없는 인덱스 삭제
