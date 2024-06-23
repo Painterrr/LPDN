@@ -206,3 +206,7 @@ idx_inventory_date_product과 idx_mart_name_brand를 사용하지 않음
 - index 지정 후 조회 속도: 1.563 sec
 - Explain 시 확인되지 않는(where 절에 없는) 테이블의 인덱스 삭제 시: 3.937 sec
   - Explain에서 확인되지 않는 것일 뿐 join 시 인덱스 테이블 활용
+
+1. DB 인덱스의 개념과 구조를 이해함
+2. 인덱스를 활용하여 조회 성능 개선
+3. 쿼리 힌트로 사용할 인덱스 지정
