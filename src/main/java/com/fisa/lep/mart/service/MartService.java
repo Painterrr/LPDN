@@ -8,7 +8,6 @@ import com.fisa.lep.area.entity.Area;
 import com.fisa.lep.area.repository.AreaRepository;
 import com.fisa.lep.inventory.entity.Inventory;
 import com.fisa.lep.inventory.repository.InventoryRepository;
-import com.fisa.lep.mart.dto.request.RequestDTO;
 import com.fisa.lep.mart.entity.Mart;
 import com.fisa.lep.mart.repository.MartRepository;
 import com.fisa.lep.product.entity.Product;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -207,14 +205,5 @@ public class MartService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Transactional(readOnly = true)
-    public String[] findLowestPrice(RequestDTO requestDTO) {
-        String[] lowest = null;
-        RequestAreaDTO requestAreaDTO = getKakaoApiFromAddress(requestDTO.getFullAddr());
-        requestAreaDTO.getRegion1depthName();
-
-        return lowest;
     }
 }

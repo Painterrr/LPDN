@@ -10,6 +10,6 @@ public interface AreaRepository extends JpaRepository<Area, Long> {
 
     Area findByZoneNo(String zoneNo);
 
-
     Area findByFullAddr(String fullAddr);
+
 }

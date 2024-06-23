@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(name = "product")
+@Table(name = "product", indexes = {
+        @Index(name = "idx_product_name", columnList = "name")
+})
 @Entity
 public class Product extends BaseEntity {
 

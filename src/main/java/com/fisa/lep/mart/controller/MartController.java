@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fisa.lep.area.dto.request.RequestAreaDTO;
-import com.fisa.lep.mart.dto.request.RequestDTO;
 import com.fisa.lep.mart.service.MartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,21 +156,5 @@ public class MartController {
             e.printStackTrace();
         }
         return null;
-    }
-
-
-    /**
-     * "/api/mart/lowest
-     * @param requestDTO(fullAddr, productName)
-     * @return String[]: { "martName, productName, price, area", "", "" }
-     */
-    @PostMapping("/lowest")
-    public ResponseEntity<String[]> findLowestPrice(@RequestBody RequestDTO requestDTO) {
-        String[] lowest = martService.findLowestPrice(requestDTO);
-
-        log.info("in MartController, lowest[0]: {}", lowest[0]);
-
-        return ResponseEntity.ok(lowest);
-
     }
 }

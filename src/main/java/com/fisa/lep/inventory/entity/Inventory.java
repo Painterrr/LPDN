@@ -17,7 +17,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(name = "inventory")
+@Table(name = "inventory", indexes = {
+        @Index(name = "idx_inventory_price", columnList = "price"),
+        @Index(name = "idx_inventory_date_product", columnList = "check_date, product_id")
+})
 @Entity
 public class Inventory extends BaseEntity {
 

@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(name = "mart")
+@Table(name = "mart", indexes = {
+        @Index(name = "idx_mart_name_brand", columnList = "name, brand")
+})
 @Entity
 public class Mart extends BaseEntity {
 

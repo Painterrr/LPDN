@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(name = "area")
+@Table(name = "area", indexes = {
+        @Index(name = "idx_area_region", columnList = "region1depthName, region2depthName, region3depthName")
+})
 @Entity
 public class Area extends BaseEntity {
 

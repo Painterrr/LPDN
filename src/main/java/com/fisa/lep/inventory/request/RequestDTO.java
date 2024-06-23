@@ -1,4 +1,4 @@
-package com.fisa.lep.mart.dto.request;
+package com.fisa.lep.inventory.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,17 @@ public class RequestDTO {
     private String productName;
 
     /**
-     * 행정동: 서울특별시 마포구 합정동
+     * 서울
      */
-    private String fullAddr;
+    private String region1depthName;
+
+    /**
+     * 중구
+     */
+    private String region2depthName;
+
+    /**
+     * 수표동
+     */
+    private String region3depthName;
 }
