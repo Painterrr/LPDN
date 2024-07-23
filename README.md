@@ -1,5 +1,5 @@
 
-# Lowest-price-daily-necessities
+# LPDN: Lowest-price-daily-necessities-search-service
 최저가 생필품 검색 서비스
 
 ## 프로젝트 목적
